@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//www.mybatis.org//DTD Mapper 3.0//EN"
+        "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.corewell.study.dao.TeacherDao">
+    <resultMap id="TeacherMap" type="com.corewell.study.domain.Teacher">
+        <id property="id" column="id"/>
+        <result property="account" column="account"/>
+        <result property="password" column="password"/>
+        <result property="name" column="name"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <select id="selectTeacher" parameterType="String" resultType="AccountDo">
+        select id, account, password, name
+        from teacher
+        where account = #{account}
+    </select>
+
+    <select id="findTeacher" resultType="TeacherDTO">
+        select id, name
+        from teacher
+    </select>
+    <select id="findTeacherById" parameterType="Long" resultType="Teacher">
+        select *
+        from teacher
+        where id = #{id}
+    </select>
+
+    <update id="updateTeacher" parameterType="Teacher">
+        update teacher
+        <set>
+            <if test="password!=null and password!=''">
+                password =#{password},
+            </if>
+            <if test="name!=null and name!=''">
+                name = #{name},
+            </if>
+            <if test="updateTime!=null">
+                update_time =#{updateTime},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+
+</mapper>
+

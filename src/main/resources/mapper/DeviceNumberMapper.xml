@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//www.mybatis.org//DTD Mapper 3.0//EN"
+        "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.corewell.study.dao.DeviceNumberDao">
+    <resultMap id="DeviceNumberMap" type="com.corewell.study.domain.DeviceNumber">
+        <id property="id" column="id"/>
+        <result property="deviceId" column="device_id"/>
+        <result property="deviceNo" column="deviceNo"/>
+        <result property="status" column="status"/>
+
+    </resultMap>
+
+    <select id="findDeviceNumber" parameterType="DeviceNumberReq" resultType="DeviceNumber">
+        select *
+        from device_number
+        where status = 0
+        <if test="type!=null and type!=''">
+            and type=#{type}
+        </if>
+    </select>
+
+    <update id="updateDeviceNumberBind" parameterType="DeviceNumber">
+        update device_number
+        set device_id=#{deviceId},
+            status=1
+        where deviceNo = #{deviceNo}
+    </update>
+
+    <update id="updateDeviceNumber" parameterType="Long">
+        update device_number
+        set device_id=null,
+            status=0
+        where device_id = #{deviceId}
+    </update>
+</mapper>
+

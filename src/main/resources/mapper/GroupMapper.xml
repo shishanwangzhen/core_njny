@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//www.mybatis.org//DTD Mapper 3.0//EN"
+        "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.corewell.study.dao.GroupDao">
+    <resultMap id="GroupMap" type="com.corewell.study.domain.Group">
+        <id property="id" column="id"/>
+        <result property="number" column="number"/>
+        <result property="name" column="name"/>
+        <result property="creatorId" column="creator_id"/>
+        <result property="info" column="info"/>
+        <result property="projectId" column="project_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="status" column="status"/>
+
+    </resultMap>
+
+    <select id="findGroup" parameterType="GroupReq" resultType="Group">
+        select id, number, name, creator_id as creatorId, info, project_id as projectId,
+        create_time as createTime, update_time as updateTime, status
+        from `group`
+        where status=1
+        <if test="id!=null and id!=''">
+            and id=#{id}
+        </if>
+        <if test="creatorId!=null and creatorId!=''">
+            and creator_id=#{creatorId}
+        </if>
+        <if test="projectId!=null and projectId!=''">
+            and project_id=#{projectId}
+        </if>
+
+    </select>
+
+    <insert id="insertGroup" parameterType="Group">
+        insert into `group`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id!=null and id!=''">
+                id,
+            </if>
+            <if test="number!=null and number!=''">
+                number,
+            </if>
+            <if test="name!=null and name!=''">
+                name,
+            </if>
+            <if test="creatorId!=null and creatorId!=''">
+                creator_id,
+            </if>
+            <if test="info!=null and info!=''">
+                info,
+            </if>
+            <if test="projectId!=null and projectId!=''">
+                project_id,
+            </if>
+            <if test="createTime!=null">
+                create_time,
+            </if>
+            <if test="updateTime!=null">
+                update_time,
+            </if>
+            <if test="status!=null and status!=''">
+                status
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id!=null and id!=''">
+                #{id},
+            </if>
+            <if test="number!=null and number!=''">
+                #{number},
+            </if>
+            <if test="name!=null and name!=''">
+                #{name},
+            </if>
+            <if test="creatorId!=null and creatorId!=''">
+                #{creatorId},
+            </if>
+            <if test="info!=null and info!=''">
+                #{info},
+            </if>
+            <if test="projectId!=null and projectId!=''">
+                #{projectId},
+            </if>
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+            <if test="updateTime!=null">
+                #{updateTime},
+            </if>
+            <if test="status!=null and status!=''">
+                #{status}
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="updateGroup" parameterType="Group">
+        update `group`
+        <set>
+            <if test="number!=null and number!=''">
+                number =#{number},
+            </if>
+            <if test="name!=null and name!=''">
+                name = #{name},
+            </if>
+            <if test="creatorId!=null and creatorId!=''">
+                creator_id =#{creatorId},
+            </if>
+            <if test="info!=null and info!=''">
+                info =#{info},
+            </if>
+            <if test="projectId!=null and projectId!=''">
+                project_id=#{projectId},
+            </if>
+            <if test="createTime!=null">
+                create_time =#{createTime},
+            </if>
+            <if test="updateTime!=null">
+                update_time =#{updateTime},
+            </if>
+            <if test="status!=null and status!=''">
+                status =#{status}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <update id="updateGroupStatus" parameterType="Long">
+        update `group`
+        set status=0,
+            update_time=now()
+        where id = #{id}
+    </update>
+    <update id="updateGroupStatusByProjectId" parameterType="Long">
+        update `group`
+        set status=0,
+            update_time=now()
+        where project_id = #{projectId}
+    </update>
+
+    <update id="updateGroupStatusByCreatorId" parameterType="Long">
+        update `group`
+        set status=0,
+            update_time=now()
+        where creator_id = #{creatorId}
+    </update>
+</mapper>
+

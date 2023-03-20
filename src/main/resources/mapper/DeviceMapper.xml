@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//www.mybatis.org//DTD Mapper 3.0//EN"
+        "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.corewell.study.dao.DeviceDao">
+    <resultMap id="DeviceMap" type="com.corewell.study.domain.Device">
+        <id property="id" column="id"/>
+        <result property="deviceId" column="device_id"/>
+        <result property="deviceName" column="device_name"/>
+        <result property="deviceNo" column="deviceNo"/>
+        <result property="link_type" column="linkType"/>
+        <result property="timescale" column="timescale"/>
+        <result property="iocUrl" column="ioc_url"/>
+        <result property="isDelete" column="is_delete"/>
+        <result property="type" column="type"/>
+        <result property="binding" column="binding"/>
+        <result property="bindingId" column="binding_id"/>
+        <result property="projectId" column="project_id"/>
+        <result property="groupId" column="group_id"/>
+        <result property="creatorId" column="creator_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="videoUrl" column="video_url"/>
+
+    </resultMap>
+
+    <select id="findDevice" parameterType="DeviceReq" resultType="DeviceDo">
+        select d.id,
+        d.device_id as deviceId,
+        d.device_name as deviceName,
+        d.deviceNo,
+        d.link_type as linkType,
+        d.timescale,
+        d.ioc_url as iocUrl,
+        d.is_delete as isDelete,
+        d.type,
+        d.binding,
+        d.binding_id as bindingId,
+        d.project_id as projectId,
+        d.group_id as groupId,
+        d.creator_id as creatorId,
+        d.create_time as createTime,
+        d.update_time as updateTime,
+        d.video_url as videoUrl,
+        t.name as bindingName,
+        p.name as projectName,
+        g.name as groupName,
+        t2.name as creatorName
+        from device d
+        left join teacher t on d.binding_id = t.id
+        left join teacher t2 on t2.id=d.creator_id
+        left join project p on d.project_id = p.id
+        left join `group` g on d.group_id = g.id
+        where d.is_delete=0
+        <if test="projectId!=null and projectId!=''">
+            and d.project_id=#{projectId}
+        </if>
+        <if test="groupId!=null and groupId!=''">
+            and d.group_id=#{groupId}
+        </if>
+        <if test="binding!=null and binding!=''">
+            and d.binding=#{binding}
+        </if>
+        <if test="id!=null and id!=''">
+            and d.id=#{id}
+        </if>
+        <if test="type!=null and type!=''">
+            and d.type=#{type}
+        </if>
+        <if test="creatorId!=null and creatorId!=''">
+            and d.creator_id=#{creatorId}
+        </if>
+        <if test="bindingId!=null and bindingId!=''">
+            and d.binding_id=#{bindingId}
+        </if>
+        <if test="deviceNo!=null and deviceNo!=''">
+            and d.deviceNo=#{deviceNo}
+        </if>
+        <if test="deviceId!=null and deviceId!=''">
+            and d.device_id=#{deviceId}
+        </if>
+        <if test="deviceName!=null and deviceName!=''">
+            and d.device_name like CONCAT('%' , #{deviceName ,jdbcType=VARCHAR},'%')
+        </if>
+
+    </select>
+
+    <select id="findDeviceByProjectId" parameterType="DeviceReq" resultType="DeviceDo">
+        select d.id,
+               d.device_id   as deviceId,
+               d.device_name as deviceName,
+               d.deviceNo,
+               d.link_type   as linkType,
+               d.timescale,
+               d.ioc_url     as iocUrl,
+               d.is_delete   as isDelete,
+               d.type,
+               d.binding,
+               d.binding_id  as bindingId,
+               d.project_id  as projectId,
+               d.group_id    as groupId,
+               d.creator_id  as creatorId,
+               d.create_time as createTime,
+               d.update_time as updateTime,
+               d.video_url   as videoUrl,
+               p.name        as projectName
+        from device d
+                 left join project p on d.project_id = p.id
+        where d.is_delete = 0
+          and d.group_id = 0
+          and d.project_id = #{projectId}
+          and d.type = #{type}
+
+    </select>
+
+    <select id="findControllerAndCollectionDevice" parameterType="ControllerAndCollectionDeviceReq" resultType="Device">
+        select id,
+        device_id as deviceId,
+        device_name as deviceName,
+        deviceNo,
+        link_type as linkType,
+        timescale,
+        binding,
+        binding_id as bindingId,
+        project_id as projectId,
+        group_id as groupId,
+        creator_id as creatorId
+        from device
+        where is_delete=0
+        <if test="type!=null and type!=''">
+            and type=#{type}
+        </if>
+        <if test="projectId!=null and projectId!=''">
+            and project_id=#{projectId}
+        </if>
+        <if test="groupId!=null and groupId!=''">
+            and group_id=#{groupId}
+        </if>
+    </select>
+
+    <select id="findDeviceBindGroup" parameterType="Long" resultType="Device">
+        select id,
+               device_id   as deviceId,
+               device_name as deviceName,
+               deviceNo,
+               link_type   as linkType,
+               timescale,
+               binding,
+               binding_id  as bindingId,
+               project_id  as projectId,
+               group_id    as groupId,
+               creator_id  as creatorId
+        from device
+        where is_delete = 0
+          and group_id = 0
+          and binding = 1
+          and project_id = #{projectId}
+    </select>
+
+    <insert id="insertDevice" parameterType="Device">
+        insert into device
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deviceId!=null and deviceId!=''">
+                device_id,
+            </if>
+            <if test="deviceName!=null and deviceName!=''">
+                device_name,
+            </if>
+            <if test="deviceNo!=null and deviceNo!=''">
+                deviceNo,
+            </if>
+            <if test="linkType!=null and linkType!=''">
+                link_type,
+            </if>
+            <if test="timescale!=null and timescale!=''">
+                timescale,
+            </if>
+            <if test="iocUrl!=null and iocUrl!=''">
+                ioc_url,
+            </if>
+            <if test="isDelete!=null and isDelete!=''">
+                is_delete,
+            </if>
+            <if test="type!=null and type!=''">
+                type,
+            </if>
+            <if test="binding!=null and binding!=''">
+                binding,
+            </if>
+            <if test="bindingId!=null and bindingId!=''">
+                binding_id,
+            </if>
+            <if test="projectId!=null and projectId!=''">
+                project_id,
+            </if>
+            <if test="groupId!=null and groupId!=''">
+                group_id,
+            </if>
+            <if test="creatorId!=null and creatorId!=''">
+                creator_id,
+            </if>
+            <if test="createTime!=null">
+                create_time,
+            </if>
+            <if test="updateTime!=null">
+                update_time,
+            </if>
+            <if test="videoUrl!=null and videoUrl!=''">
+                video_url,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deviceId!=null and deviceId!=''">
+                #{deviceId},
+            </if>
+            <if test="deviceName!=null and deviceName!=''">
+                #{deviceName},
+            </if>
+            <if test="deviceNo!=null and deviceNo!=''">
+                #{deviceNo},
+            </if>
+            <if test="linkType!=null and linkType!=''">
+                #{linkType},
+            </if>
+            <if test="timescale!=null and timescale!=''">
+                #{timescale},
+            </if>
+            <if test="iocUrl!=null and iocUrl!=''">
+                #{iocUrl},
+            </if>
+            <if test="isDelete!=null and isDelete!=''">
+                #{isDelete},
+            </if>
+            <if test="type!=null and type!=''">
+                #{type},
+            </if>
+            <if test="binding!=null and binding!=''">
+                #{binding},
+            </if>
+            <if test="bindingId!=null and bindingId!=''">
+                #{bindingId},
+            </if>
+            <if test="projectId!=null and projectId!=''">
+                #{projectId},
+            </if>
+            <if test="groupId!=null and groupId!=''">
+                #{groupId},
+            </if>
+
+            <if test="creatorId!=null and creatorId!=''">
+                #{creatorId},
+            </if>
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+            <if test="updateTime!=null">
+                #{updateTime},
+            </if>
+            <if test="videoUrl!=null and videoUrl!=''">
+                #{videoUrl},
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="updateDevice" parameterType="Device">
+        update device
+        <set>
+            <if test="deviceId!=null and deviceId!=''">
+                device_id=#{deviceId},
+            </if>
+            <if test="deviceName!=null and deviceName!=''">
+                device_name=#{deviceName},
+            </if>
+            <if test="deviceNo!=null and deviceNo!=''">
+                deviceNo=#{deviceNo},
+            </if>
+            <if test="linkType!=null and linkType!=''">
+                link_type= #{linkType},
+            </if>
+            <if test="timescale!=null and timescale!=''">
+                timescale=#{timescale},
+            </if>
+            <if test="iocUrl!=null and iocUrl!=''">
+                ioc_url=#{iocUrl},
+            </if>
+            <if test="isDelete!=null and isDelete!=''">
+                is_delete=#{isDelete},
+            </if>
+            <if test="type!=null and type!=''">
+                type=#{type},
+            </if>
+            <if test="binding!=null and binding!=''">
+                binding=#{binding},
+            </if>
+            <if test="bindingId!=null and bindingId!=''">
+                binding_id=#{bindingId},
+            </if>
+            <if test="projectId!=null and projectId!=''">
+                project_id=#{projectId},
+            </if>
+            <if test="groupId!=null and groupId!=''">
+                group_id=#{groupId},
+            </if>
+            <if test="creatorId!=null and creatorId!=''">
+                creator_id=#{creatorId},
+            </if>
+            <if test="createTime!=null">
+                create_time=#{createTime},
+            </if>
+            <if test="updateTime!=null">
+                update_time=#{updateTime},
+            </if>
+            <if test="videoUrl!=null and videoUrl!=''">
+                video_url=#{videoUrl}
+            </if>
+        </set>
+        where device_id=#{deviceId}
+    </update>
+    <update id="updateVideoDevice" parameterType="Device">
+        update device
+        <set>
+            <if test="deviceName!=null and deviceName!=''">
+                device_name=#{deviceName},
+            </if>
+            <if test="deviceNo!=null and deviceNo!=''">
+                deviceNo=#{deviceNo},
+            </if>
+            <if test="type!=null and type!=''">
+                type=#{type},
+            </if>
+            <if test="binding!=null and binding!=''">
+                binding=#{binding},
+            </if>
+            <if test="bindingId!=null and bindingId!=''">
+                binding_id=#{bindingId},
+            </if>
+            <if test="projectId!=null and projectId!=''">
+                project_id=#{projectId},
+            </if>
+            <if test="groupId!=null and groupId!=''">
+                group_id=#{groupId},
+            </if>
+            <if test="creatorId!=null and creatorId!=''">
+                creator_id=#{creatorId},
+            </if>
+            <if test="createTime!=null">
+                create_time=#{createTime},
+            </if>
+            <if test="updateTime!=null">
+                update_time=#{updateTime},
+            </if>
+            <if test="videoUrl!=null and videoUrl!=''">
+                video_url=#{videoUrl}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+
+    <delete id="deleteDevice" parameterType="Long">
+        update device
+        set is_delete=1
+        where device_id = #{deviceId}
+    </delete>
+
+    <delete id="deleteDeviceById" parameterType="Long">
+        update device
+        set is_delete=1,
+            update_time=now()
+        where id = #{id}
+    </delete>
+
+    <update id="updateBindingByProjectId" parameterType="Long">
+        update Device
+        set binding=0,
+            group_id=0,
+            project_id=0,
+            binding_id=0,
+            update_time=now()
+        where project_id = #{projectId}
+    </update>
+
+    <update id="updateBindingByBindingId" parameterType="Long">
+        update Device
+        set binding=0,
+            group_id=0,
+            project_id=0,
+            binding_id=0,
+            update_time=now()
+        where binding_id = #{bindingId}
+    </update>
+
+    <update id="updateBindingByGroupId" parameterType="Long">
+        update Device
+        set group_id=0,
+            update_time=now()
+        where group_id = #{groupId}
+    </update>
+
+    <update id="updateBindingGroupById" parameterType="Long">
+        update Device
+        set group_id=0,
+            update_time=now()
+        where id = #{id}
+    </update>
+
+    <!--批量更新-->
+    <update id="updateDeviceBinding" parameterType="DeviceBindingReq">
+        update device set binding=#{binding},project_id=#{projectId},binding_id=#{bindingId} where id in
+        <foreach collection="ids" item="ids" open="(" close=")" separator=",">
+            #{ids}
+        </foreach>
+
+    </update>
+
+    <update id="updateDeviceBindingById" parameterType="Long">
+        update device
+        set binding=0,
+            project_id=0,
+            group_id=0,
+            binding_id=0,
+            update_time=now()
+        where id = #{id}
+    </update>
+
+    <update id="updateDeviceBindingGroup" parameterType="DeviceBindingGroupReq">
+        update device
+        set group_id=#{groupId},
+            update_time=now()
+        where id = #{id}
+    </update>
+
+
+</mapper>
+

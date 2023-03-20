@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//www.mybatis.org//DTD Mapper 3.0//EN"
+        "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.corewell.study.dao.SensorDao">
+    <resultMap id="SensorMap" type="com.corewell.study.domain.Sensor">
+        <id property="id" column="id"/>
+        <result property="sensorId" column="sensor_id"/>
+        <result property="sensorName" column="sensor_name"/>
+        <result property="sensorType" column="sensor_type"/>
+        <result property="unit" column="unit"/>
+        <result property="ordernum" column="ordernum"/>
+        <result property="decimalPlacse" column="decimalPlacse"/>
+        <result property="deviceId" column="device_id"/>
+        <result property="deviceName" column="device_name"/>
+        <result property="creatorId" column="creator_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="maximum" column="maximum"/>
+        <result property="minimum" column="minimum"/>
+
+    </resultMap>
+
+    <select id="findSensor" parameterType="SensorReq" resultType="Sensor">
+        select id,
+        sensor_id as sensorId,
+        sensor_name as sensorName,
+        sensor_type as sensorType,
+        unit,
+        decimalPlacse,
+        device_id as deviceId,
+        device_name as deviceName,
+        maximum,
+        minimum
+        from sensor
+        where 1=1
+        <if test="deviceId!=null and deviceId!=''">
+            and device_id=#{deviceId}
+        </if>
+        <if test="id!=null and id!=''">
+            and id=#{id}
+        </if>
+        <if test="sensorId!=null and sensorId!=''">
+            and sensor_id=#{sensorId}
+        </if>
+
+    </select>
+    <select id="findSensorBySensorId" parameterType="Long" resultType="Sensor">
+        select id,
+               sensor_id   as sensorId,
+               sensor_name as sensorName,
+               sensor_type as sensorType,
+               unit,
+               decimalPlacse,
+               device_id   as deviceId,
+               device_name as deviceName,
+               maximum,
+               minimum
+        from sensor
+        where sensor_id = #{sensorId}
+    </select>
+    <select id="findSensorById" parameterType="Long" resultType="Sensor">
+        select id,
+               sensor_id   as sensorId,
+               sensor_name as sensorName,
+               sensor_type as sensorType,
+               unit,
+               decimalPlacse,
+               device_id   as deviceId,
+               device_name as deviceName,
+               maximum,
+               minimum
+        from sensor
+        where id = #{id}
+    </select>
+
+
+    <update id="updateSensorRange" parameterType="SensorUpdateParam">
+        update sensor
+        set maximum=#{maximum},
+            minimum=#{minimum},
+            update_time=now()
+        where id = #{id}
+    </update>
+
+
+    <insert id="insertSensor" parameterType="Sensor">
+        insert into sensor
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sensorId!=null and sensorId!=''">
+                sensor_id,
+            </if>
+            <if test="sensorName!=null and sensorName!=''">
+                sensor_name,
+            </if>
+            <if test="sensorType!=null and sensorType!=''">
+                sensor_type,
+            </if>
+            <if test="unit!=null and unit!=''">
+                unit,
+            </if>
+            <if test="ordernum!=null and ordernum!=''">
+                ordernum,
+            </if>
+            <if test="decimalPlacse!=null and decimalPlacse!=''">
+                decimalPlacse,
+            </if>
+            <if test="deviceId!=null and deviceId!=''">
+                device_id,
+            </if>
+            <if test="deviceName!=null and deviceName!=''">
+                device_name,
+            </if>
+            <if test="creatorId!=null and creatorId!=''">
+                creator_id,
+            </if>
+            <if test="createTime!=null">
+                create_time,
+            </if>
+            <if test="updateTime!=null">
+                update_time,
+            </if>
+            <if test="maximum!=null and maximum!=''">
+                maximum,
+            </if>
+            <if test="minimum!=null and minimum!=''">
+                minimum
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sensorId!=null and sensorId!=''">
+                #{sensorId},
+            </if>
+            <if test="sensorName!=null and sensorName!=''">
+                #{sensorName},
+            </if>
+            <if test="sensorType!=null and sensorType!=''">
+                #{sensorType},
+            </if>
+            <if test="unit!=null and unit!=''">
+                #{unit},
+            </if>
+            <if test="ordernum!=null and ordernum!=''">
+                #{ordernum},
+            </if>
+            <if test="decimalPlacse!=null and decimalPlacse!=''">
+                #{decimalPlacse},
+            </if>
+            <if test="deviceId!=null and deviceId!=''">
+                #{deviceId},
+            </if>
+            <if test="deviceName!=null and deviceName!=''">
+                #{deviceName},
+            </if>
+            <if test="creatorId!=null and creatorId!=''">
+                #{creatorId},
+            </if>
+            <if test="createTime!=null">
+                #{createTime},
+            </if>
+            <if test="updateTime!=null">
+                #{updateTime},
+            </if>
+            <if test="maximum!=null and maximum!=''">
+                #{maximum},
+            </if>
+            <if test="minimum!=null and minimum!=''">
+                #{minimum}
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="updateSensor" parameterType="Sensor">
+        update sensor
+        <set>
+            <if test="sensorName!=null and sensorName!=''">
+                sensor_name =#{sensorName},
+            </if>
+            <if test="sensorType!=null and sensorType!=''">
+                sensor_type =#{sensorType},
+            </if>
+            <if test="unit!=null and unit!=''">
+                unit =#{unit},
+            </if>
+            <if test="ordernum!=null and ordernum!=''">
+                ordernum =#{ordernum},
+            </if>
+
+            <if test="decimalPlacse!=null and decimalPlacse!=''">
+                decimalPlacse =#{decimalPlacse},
+            </if>
+            <if test="deviceId!=null and deviceId!=''">
+                device_id =#{deviceId},
+            </if>
+            <if test="deviceName!=null and deviceName!=''">
+                device_name= #{deviceName},
+            </if>
+            <if test="creatorId!=null and creatorId!=''">
+                creator_id= #{creatorId},
+            </if>
+            <if test="createTime!=null">
+                create_time=#{createTime},
+            </if>
+            <if test="updateTime!=null">
+                update_time =#{updateTime},
+            </if>
+            <if test="maximum!=null and maximum!=''">
+                maximum= #{maximum},
+            </if>
+            <if test="minimum!=null and minimum!=''">
+                minimum = #{minimum}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+
+    <delete id="deleteSensorById" parameterType="Long">
+        delete
+        from sensor
+        where sensor_id = #{sensorId}
+    </delete>
+    <delete id="deleteSensorByDeviceId" parameterType="Long">
+        delete
+        from sensor
+        where device_id = #{deviceId}
+    </delete>
+</mapper>
+

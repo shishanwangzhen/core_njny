@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//www.mybatis.org//DTD Mapper 3.0//EN"
+        "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.corewell.study.dao.LogDao">
+    <resultMap id="LogMap" type="com.corewell.study.domain.Log">
+        <id property="id" column="id"/>
+        <result property="accountId" column="account_id"/>
+        <result property="account" column="account"/>
+        <result property="accountName" column="account_name"/>
+        <result property="interfaceType" column="interface_type"/>
+        <result property="interfaceInfo" column="interface_info"/>
+        <result property="interfaceName" column="interface_name"/>
+        <result property="dataId" column="data_id"/>
+        <result property="createTime" column="create_time"/>
+
+    </resultMap>
+
+    <select id="findLog" parameterType="LogReq" resultType="Log">
+        select id,
+        account as account,
+        account_id as accountId,
+        account_name as accountName,
+        interface_type as interfaceType,
+        interface_name as interfaceName,
+        interface_info as interfaceInfo,
+        data_id as dataId,
+        create_time as createTime
+        from log
+        where 1=1
+        <if test="interfaceType!=null and interfaceType!=''">
+            and interface_type=#{interfaceType}
+        </if>
+        <if test="startTime != null">
+            and create_time >=#{startTime}
+        </if>
+        <if test="endTime != null">
+            and <![CDATA[create_time <=#{endTime}]]>
+        </if>
+        order by create_time desc
+
+    </select>
+
+
+    <insert id="insertLog" parameterType="Log">
+        insert into log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="accountId!=null and accountId!=''">
+                account_id,
+            </if>
+            <if test="account!=null and account!=''">
+                account,
+            </if>
+            <if test="accountName!=null and accountName!=''">
+                account_name,
+            </if>
+            <if test="interfaceType!=null and interfaceType!=''">
+                interface_type,
+            </if>
+            <if test="interfaceInfo!=null and interfaceInfo!=''">
+                interface_info,
+            </if>
+            <if test="interfaceName!=null and interfaceName!=''">
+                interface_name,
+            </if>
+            <if test="dataId!=null and dataId!=''">
+                data_id,
+            </if>
+            <if test="createTime!=null">
+                create_time
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="accountId!=null and accountId!=''">
+                #{accountId},
+            </if>
+            <if test="account!=null and account!=''">
+                #{account},
+            </if>
+            <if test="accountName!=null and accountName!=''">
+                #{accountName},
+            </if>
+            <if test="interfaceType!=null and interfaceType!=''">
+                #{interfaceType},
+            </if>
+            <if test="interfaceInfo!=null and interfaceInfo!=''">
+                #{interfaceInfo},
+            </if>
+            <if test="interfaceName!=null and interfaceName!=''">
+                #{interfaceName},
+            </if>
+            <if test="dataId!=null and dataId!=''">
+                #{dataId},
+            </if>
+            <if test="createTime!=null">
+                #{createTime}
+            </if>
+
+        </trim>
+    </insert>
+
+
+</mapper>
+
