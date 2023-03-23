@@ -51,7 +51,7 @@ public class SensorServiceImpl implements SensorService {
             for (SensorUpdateParam sensorUpdateParam : sensorUpdateParams) {
                 sensorDao.updateSensorRange(sensorUpdateParam);
                 Sensor sensor = sensorDao.findSensorById(sensorUpdateParam.getId());
-                stringRedisTemplate.opsForValue().set(BaseRedisKeyConstants.SENSOR_KEY + sensor.getDeviceId() + ":" + sensor.getSensorId(), JSON.toJSONString(sensor), 24 * 60 * 60 * 1000, TimeUnit.MILLISECONDS);
+                stringRedisTemplate.opsForValue().set(BaseRedisKeyConstants.SENSOR_KEY + sensor.getDeviceId() + ":" + sensor.getSensorId(), JSON.toJSONString(sensor), 7*24 * 60 * 60 * 1000, TimeUnit.MILLISECONDS);
             }
             return ResultMsg.success();
         } catch (Exception e) {
