@@ -18,7 +18,7 @@ public class RabbitMqConfig {
 
     /**
      * 初始化Queue
-     * 创建一个名称为"core-study-queue"的队列，其他参数使用默认
+     * 创建一个名称为"core-njny-queue"的队列，其他参数使用默认
      * 在创建队列的时候如果要指定其他参数，Queue有多个构造方法可选择
      */
     @Bean

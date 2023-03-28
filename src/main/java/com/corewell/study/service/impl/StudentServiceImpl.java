@@ -14,7 +14,9 @@ import com.corewell.study.domain.result.ResultMsg;
 import com.corewell.study.domain.result.ResultStatusCode;
 import com.corewell.study.service.StudentService;
 import com.corewell.study.utils.JwtUtil;
+import com.corewell.study.utils.ValidateCore;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -120,9 +122,9 @@ public class StudentServiceImpl implements StudentService {
         log.info("updateStudent:  student:  " + JSON.toJSONString(student));
         //TODO
         //校验账号，上线放开
-        /*if (StringUtils.isNotBlank(student.getAccount())&& !ValidateCore.verifyAccount(student.getAccount())){
+        if (StringUtils.isNotBlank(student.getAccount())&& !ValidateCore.verifyAccount(student.getAccount())){
             return new ResultMsg(ResultStatusCode.ILLEGAL_ACCOUNT);
-        }*/
+        }
         student.setUpdateTime(new Date());
         int result = studentDao.updateStudent(student);
         if (result == 1) {
