@@ -49,7 +49,7 @@ public class PushDataServiceImpl implements PushDataService {
             return;
         }
         Long deviceId = pushData.getDeviceId();
-        stringRedisTemplate.opsForValue().set(BaseRedisKeyConstants.DEVICE_IS_LINE_KEY + deviceId, "1", 6 * 60 * 1000, TimeUnit.MILLISECONDS);
+        stringRedisTemplate.opsForValue().set(BaseRedisKeyConstants.DEVICE_IS_LINE_KEY + deviceId, "1", 9 * 60 * 1000, TimeUnit.MILLISECONDS);
         if (stringRedisTemplate.hasKey(BaseRedisKeyConstants.DEVICE_KEY + deviceId)) {
             pushData.setType("1");
             List<SensorsDates> sensorsDatesList = pushData.getSensorsDates();

@@ -88,7 +88,7 @@ public class DeviceServiceImpl implements DeviceService {
         headers.add("Authorization", "Bearer" + " " + getAccessToken.getAccessToken());
         headers.add("Content-Type", "application/json");
         headers.add("tlinkAppId", "9b248223598b471489f75f1315a7d01b");
-        log.info("headers  :::" +JSON.toJSONString(headers));
+        log.info("headers  :::" + JSON.toJSONString(headers));
         return headers;
     }
 
@@ -98,6 +98,7 @@ public class DeviceServiceImpl implements DeviceService {
         List<DeviceDo> DeviceDOList = deviceDao.findDevice(deviceReq);
         return ResultMsg.success(DeviceDOList);
     }
+
     @Override
     public ResultMsg findDeviceByProjectId(DeviceByProjectIdAndTypeReq deviceByProjectIdAndTypeReq) {
         log.info("findDeviceByProjectId:  deviceByProjectIdAndTypeReq:  " + JSON.toJSONString(deviceByProjectIdAndTypeReq));
@@ -120,10 +121,13 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public ResultMsg findDeviceIsLine(Long deviceId) {
+        log.info("findDeviceIsLine:  deviceId:  " + JSON.toJSONString(deviceId));
+        DeviceIsLineDTO deviceIsLineDTO = new DeviceIsLineDTO(deviceId, 0L);
         if (stringRedisTemplate.hasKey(BaseRedisKeyConstants.DEVICE_IS_LINE_KEY + deviceId)) {
-            return ResultMsg.success(1);
+            deviceIsLineDTO.setIsLine(1L);
+            return ResultMsg.success(deviceIsLineDTO);
         }
-        return ResultMsg.success(0);
+        return ResultMsg.success(deviceIsLineDTO);
     }
 
 
@@ -605,7 +609,7 @@ public class DeviceServiceImpl implements DeviceService {
             log.info("getParams：responseEntity.getBody()：" + responseEntity.getBody());
         } catch (RestClientException e) {
             e.printStackTrace();
-            log.error("getParams：e:  " +e.toString());
+            log.error("getParams：e:  " + e.toString());
             if (e.getMessage().contains(BaseConstants.INVALID_TOKEN)) {
                 getAccessToken.getNewAccessToken();
             }
@@ -637,7 +641,7 @@ public class DeviceServiceImpl implements DeviceService {
             flag = jsonObject.get("flag").toString();
         } catch (RestClientException e) {
             e.printStackTrace();
-            log.error("setParams：e:  " +e.toString());
+            log.error("setParams：e:  " + e.toString());
             if (e.getMessage().contains(BaseConstants.INVALID_TOKEN)) {
                 getAccessToken.getNewAccessToken();
             }
@@ -664,7 +668,7 @@ public class DeviceServiceImpl implements DeviceService {
             mapParam.put("modbusList", modbusList);
             if (modbusList.size() > 0) {
                 responseEntity = restTemplate.postForEntity(TLINK_SETMODBUS_URL, new HttpEntity<Map>(mapParam, getHeaders()), String.class);
-               log.info("setModbus：responseEntity.getBody()：" + responseEntity.getBody());
+                log.info("setModbus：responseEntity.getBody()：" + responseEntity.getBody());
                 Iterator<Modbus> iterator = modbusList.iterator();
                 while (iterator.hasNext()) {
                     Modbus modbus = iterator.next();
@@ -674,7 +678,7 @@ public class DeviceServiceImpl implements DeviceService {
                 }
                 if (modbusList.size() > 0) {
                     mapParam.put("modbusList", modbusList);
-                   log.info("setModbus：mapParam：" + JSON.toJSONString(mapParam));
+                    log.info("setModbus：mapParam：" + JSON.toJSONString(mapParam));
                     responseEntity = restTemplate.postForEntity(TLINK_UPDATEMODBUS_URL, new HttpEntity<Map>(mapParam, getHeaders()), String.class);
                 }
 

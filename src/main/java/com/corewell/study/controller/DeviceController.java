@@ -53,9 +53,9 @@ public class DeviceController {
 
     }
 
-    @ApiOperation("定时任务查询设备状态")
+    @ApiOperation(value = "定时任务查询设备状态", response = DeviceIsLineDTO.class)
     @PostMapping("/findDeviceIsLine")
-    @ApiIgnore
+    @ApiImplicitParam(value = "设备id deviceId", name = "1", required = true)
     public ResultMsg findDeviceIsLine(Long deviceId) {
         ResultMsg resultMsg = DeviceService.findDeviceIsLine(deviceId);
         return resultMsg;
