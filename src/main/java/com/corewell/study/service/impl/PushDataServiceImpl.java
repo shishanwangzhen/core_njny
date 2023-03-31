@@ -49,7 +49,6 @@ public class PushDataServiceImpl implements PushDataService {
             return;
         }
         Long deviceId = pushData.getDeviceId();
-        stringRedisTemplate.opsForValue().set(BaseRedisKeyConstants.DEVICE_IS_LINE_KEY + deviceId, "1", 9 * 60 * 1000, TimeUnit.MILLISECONDS);
         if (stringRedisTemplate.hasKey(BaseRedisKeyConstants.DEVICE_KEY + deviceId)) {
             pushData.setType("1");
             List<SensorsDates> sensorsDatesList = pushData.getSensorsDates();
@@ -72,7 +71,7 @@ public class PushDataServiceImpl implements PushDataService {
             }
         }
         String data = JSON.toJSONString(pushData);
-        log.info("推送前端并且写入influxdb数据getPushData:" + data);
+        stringRedisTemplate.opsForValue().set(BaseRedisKeyConstants.DEVICE_IS_LINE_KEY + deviceId, data, 9 * 60 * 1000, TimeUnit.MILLISECONDS);
         try {
             webSocketServer.sendMessageAllUser(data);
             rabbitTemplate.convertAndSend("core-njny-queue", data);

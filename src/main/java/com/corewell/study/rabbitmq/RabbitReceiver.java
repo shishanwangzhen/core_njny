@@ -70,7 +70,7 @@ public class RabbitReceiver {
                             .addField("reVal", sensorDates.getReVal())
                             .addField("value", sensorDates.getValue())
                             .build());
-                } else if (sensorDates.getSensorsTypeId() == 2) {
+                } else {
                     influxDB.write("test", "", Point.measurement("CORE_NJNY")
                             .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
                             .tag("deviceId", deviceId)
