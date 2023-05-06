@@ -43,7 +43,7 @@ public class Swagger2Config {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 //页面标题
-                .title("智慧农业物联网实训云平台API接口文档")
+                .title("传感器在线仿真实验管理系统API接口文档")
                 //创建人
                 .contact(new Contact("十山", null,
                         null))

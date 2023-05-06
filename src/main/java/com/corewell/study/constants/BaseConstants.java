@@ -32,6 +32,11 @@ public class BaseConstants {
     /**
      * 江苏农林学号正则表达式
      */
-    public static final String REG_PATTERN_ACCOUNT = "^(20)[0-9]{10}$";
+    //public static final String REG_PATTERN_ACCOUNT = "^(20)[0-9]{10}$";
+
+    /**
+     * 南京农业学号正则表达式
+     */
+    public static final String REG_PATTERN_ACCOUNT = "^[0-9]*$";
 
 }
