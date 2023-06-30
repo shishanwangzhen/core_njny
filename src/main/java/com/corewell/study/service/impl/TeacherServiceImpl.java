@@ -43,7 +43,7 @@ public class TeacherServiceImpl implements TeacherService {
         if (!password.equals(accountDo.getPassword())) {
             return new ResultMsg(ResultStatusCode.LOGIN_ERR);
         }
-        //准备存放在IWT中的自定义数据
+        //准备存放在JWT中的自定义数据
         Map<String, Object> info = new HashMap<>(16);
         info.put("id", accountDo.getId());
         info.put("account", account);

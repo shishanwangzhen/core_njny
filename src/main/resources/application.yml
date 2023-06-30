@@ -93,7 +93,7 @@ logging:
     #日志相关配置
   config: classpath:logback-spring.xml
   file:
-    path: /home/core_njny/logs/
+    path: core/home/core_njny/logs/
 jwt:
   #JWT 存储请求头
   tokenHeader: Authorization
